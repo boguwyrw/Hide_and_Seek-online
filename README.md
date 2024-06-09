@@ -1,1 +1,2 @@
-# Hide_and_Seek-online
+# Hide and Seek - online
+Try to find people
