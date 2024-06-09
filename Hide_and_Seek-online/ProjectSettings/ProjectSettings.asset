@@ -160,7 +160,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.DefaultCompany.Hide-and-Seek-online
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -786,8 +787,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Hide_and_Seek-online
-  metroPackageVersion: 
+  metroPackageName: HideandSeek-online
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -795,7 +796,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Hide_and_Seek-online
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Hide_and_Seek-online
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
