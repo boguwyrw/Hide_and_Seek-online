@@ -33,11 +33,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _roomBrowserPanel;
 
+    [SerializeField] private RoomButton _roomButton;
+
     [SerializeField] private TMP_InputField _roomNameInputField;
 
     [SerializeField] private TMP_Text _loadingText;
     [SerializeField] private TMP_Text _errorText;
     [SerializeField] private TMP_Text _roomNameText;
+
+    private List<RoomButton> _roomButtons = new List<RoomButton>();
 
     private void Start()
     {
@@ -94,6 +98,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         _buttonsPanel.SetActive(true);
     }
 
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        
+    }
+
     public void OpenCreateRoomPanel()
     {
         CloseMenus();
@@ -129,5 +138,17 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         _loadingPanel.SetActive(true);
         _loadingText.text = LEAVING_ROOM;
+    }
+
+    public void OpenRoomBrowser()
+    {
+        CloseMenus();
+        _roomBrowserPanel.SetActive(true);
+    }
+
+    public void CloseRoomBrowser()
+    {
+        CloseMenus();
+        _buttonsPanel.SetActive(true);
     }
 }

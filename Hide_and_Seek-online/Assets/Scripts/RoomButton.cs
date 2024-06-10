@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Realtime;
+using TMPro;
 
 public class RoomButton : MonoBehaviour
 {
-    
-    private void Start()
-    {
-        
-    }
+    [SerializeField] private TMP_Text _roomNameText;
 
-    private void Update()
+    private RoomInfo _roomInfo;
+
+    public void SetButtonDetails(RoomInfo roomInfo)
     {
-        
+        _roomInfo = roomInfo;
+        _roomNameText.text = _roomInfo.Name;
     }
 }

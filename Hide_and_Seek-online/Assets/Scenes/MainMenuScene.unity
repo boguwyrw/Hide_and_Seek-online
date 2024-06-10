@@ -1741,13 +1741,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2771,7 +2771,7 @@ GameObject:
   - component: {fileID: 1278405337}
   - component: {fileID: 1278405336}
   m_Layer: 5
-  m_Name: LeaveRoomButton
+  m_Name: CloseRoomBrowserButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2858,7 +2858,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1639677632}
         m_TargetAssemblyTypeName: Launcher, Assembly-CSharp
-        m_MethodName: LeaveRoomButton
+        m_MethodName: CloseRoomBrowser
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3332,7 +3332,7 @@ GameObject:
   - component: {fileID: 1343047732}
   - component: {fileID: 1343047731}
   m_Layer: 5
-  m_Name: LeaveRoomText
+  m_Name: CloseRoomBrowserText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3377,7 +3377,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Leave Room
+  m_text: Close
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3805,7 +3805,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1587844071}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1639677632}
+        m_TargetAssemblyTypeName: Launcher, Assembly-CSharp
+        m_MethodName: OpenRoomBrowser
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1587844071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4054,6 +4066,7 @@ MonoBehaviour:
   _createRoomPanel: {fileID: 1677054626}
   _roomPanel: {fileID: 923283113}
   _roomBrowserPanel: {fileID: 883923974}
+  _roomButton: {fileID: 1690699908}
   _roomNameInputField: {fileID: 1297432967}
   _loadingText: {fileID: 159437909}
   _errorText: {fileID: 32912472}
@@ -4428,7 +4441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
-  m_EffectDistance: {x: 8, y: 8}
+  m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 1
 --- !u!114 &1690699905
 MonoBehaviour:
@@ -4524,6 +4537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 196f3610af982f64abc50d54a28b7305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _roomNameText: {fileID: 841484913}
 --- !u!1 &1693451918
 GameObject:
   m_ObjectHideFlags: 0
