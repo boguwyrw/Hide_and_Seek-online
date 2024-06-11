@@ -25,6 +25,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     private readonly string JOINING_LOBBY = "Joining lobby ...";
     private readonly string CREATING_ROOM = "Creating room ...";
     private readonly string LEAVING_ROOM = "Leaving room ...";
+    private readonly string JOINING_ROOM = "Joining room ...";
 
     [SerializeField] private GameObject _buttonsPanel;
     [SerializeField] private GameObject _loadingPanel;
@@ -100,7 +101,26 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        
+        foreach (RoomButton rb in _roomButtons)
+        {
+            Destroy(rb.gameObject);
+        }
+        _roomButtons.Clear();
+
+        _roomButton.gameObject.SetActive(false);
+
+        for (int i = 0; i < roomList.Count; i++)
+        {
+            bool canCreateRoomButton = roomList[i].PlayerCount != roomList[i].MaxPlayers && !roomList[i].RemovedFromList;
+            if (canCreateRoomButton)
+            {
+                RoomButton roomButton = Instantiate(_roomButton, _roomButton.transform.parent);
+                roomButton.SetButtonDetails(roomList[i]);
+                roomButton.gameObject.SetActive(true);
+
+                _roomButtons.Add(roomButton);
+            }
+        }
     }
 
     public void OpenCreateRoomPanel()
@@ -150,5 +170,19 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         CloseMenus();
         _buttonsPanel.SetActive(true);
+    }
+
+    public void JoinRoom(RoomInfo roomInfoInput)
+    {
+        PhotonNetwork.JoinRoom(roomInfoInput.Name);
+
+        CloseMenus();
+        _loadingPanel.SetActive(true);
+        _loadingText.text = JOINING_ROOM;
+    }
+
+    public void QuitGameButton()
+    {
+        Application.Quit();
     }
 }
