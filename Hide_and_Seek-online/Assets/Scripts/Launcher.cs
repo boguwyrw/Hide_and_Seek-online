@@ -41,8 +41,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_Text _loadingText;
     [SerializeField] private TMP_Text _errorText;
     [SerializeField] private TMP_Text _roomNameText;
+    [SerializeField] private TMP_Text _playerNameText;
 
     private List<RoomButton> _roomButtons = new List<RoomButton>();
+
+    private List<TMP_Text> _playersNames = new List<TMP_Text>();
 
     private void Start()
     {
@@ -75,6 +78,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         CloseMenus();
         _buttonsPanel.SetActive(true);
+
+        PhotonNetwork.NickName = Random.Range(10, 1000).ToString();
     }
 
     public override void OnJoinedRoom()
@@ -83,6 +88,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         _roomPanel.SetActive(true);
 
         _roomNameText.text = PhotonNetwork.CurrentRoom.Name;
+
+        PlayersInGame();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -121,6 +128,42 @@ public class Launcher : MonoBehaviourPunCallbacks
                 _roomButtons.Add(roomButton);
             }
         }
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        CreatePlayerNameText(newPlayer);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        PlayersInGame();
+    }
+
+    private void PlayersInGame()
+    {
+        foreach(TMP_Text playerName in _playersNames)
+        {
+            Destroy(playerName.gameObject);
+        }
+        _playersNames.Clear();
+
+        _playerNameText.gameObject.SetActive(false);
+
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            CreatePlayerNameText(players[i]);
+        }
+    }
+
+    private void CreatePlayerNameText(Player player)
+    {
+        TMP_Text nameText = Instantiate(_playerNameText, _playerNameText.transform.parent);
+        nameText.text = player.NickName;
+        nameText.gameObject.SetActive(true);
+
+        _playersNames.Add(nameText);
     }
 
     public void OpenCreateRoomPanel()
