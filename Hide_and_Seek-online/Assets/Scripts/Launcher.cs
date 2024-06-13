@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using WebSocketSharp;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
@@ -31,17 +32,21 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _loadingPanel;
     [SerializeField] private GameObject _errorPanel;
     [SerializeField] private GameObject _createRoomPanel;
+    [SerializeField] private GameObject _createPlayerNamePanel;
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _roomBrowserPanel;
 
     [SerializeField] private RoomButton _roomButton;
 
     [SerializeField] private TMP_InputField _roomNameInputField;
+    [SerializeField] private TMP_InputField _playerNameInputField;
 
     [SerializeField] private TMP_Text _loadingText;
     [SerializeField] private TMP_Text _errorText;
     [SerializeField] private TMP_Text _roomNameText;
     [SerializeField] private TMP_Text _playerNameText;
+
+    private bool _hasNickName = false;
 
     private List<RoomButton> _roomButtons = new List<RoomButton>();
 
@@ -63,6 +68,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         _loadingPanel.SetActive(false);
         _errorPanel.SetActive(false);
         _createRoomPanel.SetActive(false);
+        _createPlayerNamePanel.SetActive(false);
         _roomPanel.SetActive(false);
         _roomBrowserPanel.SetActive(false);
     }
@@ -79,7 +85,12 @@ public class Launcher : MonoBehaviourPunCallbacks
         CloseMenus();
         _buttonsPanel.SetActive(true);
 
-        PhotonNetwork.NickName = Random.Range(10, 1000).ToString();
+        if (!_hasNickName)
+        {
+            CloseMenus();
+
+            _createPlayerNamePanel.SetActive(true);
+        }
     }
 
     public override void OnJoinedRoom()
@@ -227,5 +238,18 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void QuitGameButton()
     {
         Application.Quit();
+    }
+
+    public void CreatePlayerNameButton()
+    {
+        if (!string.IsNullOrEmpty(_playerNameInputField.text))
+        {
+            PhotonNetwork.NickName = _playerNameInputField.text;
+
+            CloseMenus();
+            _buttonsPanel.SetActive(true);
+
+            _hasNickName = true;
+        }
     }
 }
