@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Transform _viewPoint;
     [SerializeField] private Transform _camera;
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _movement;
     private Vector3 _moveDirection;
 
-    public Transform ViewPoint {  get { return _viewPoint; } }
+    public Transform ViewPoint { get { return _viewPoint; } }
 
     private void Start()
     {
@@ -43,21 +44,30 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        PlayerMovement();
+        if (photonView.IsMine)
+        {
+            PlayerMovement();
 
-        PlayerRotation();
+            PlayerRotation();
 
-        ReleaseJump();
+            ReleaseJump();
+        }
     }
 
     private void FixedUpdate()
     {
-        PlayerJump();
+        if (photonView.IsMine)
+        {
+            PlayerJump();
+        }
     }
 
     private void LateUpdate()
     {
-        CameraFollow();
+        if (photonView.IsMine)
+        {
+            CameraFollow();
+        }
     }
 
     private void PlayerMovement()
