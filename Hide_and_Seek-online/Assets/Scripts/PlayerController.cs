@@ -33,6 +33,11 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        if (_camera == null)
+        {
+            _camera = Camera.main.transform;
+        }
+
         _currentSpeed = _walkSpeed;
     }
 

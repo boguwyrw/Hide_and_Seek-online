@@ -14,7 +14,10 @@ public class PlayerVisionController : MonoBehaviour
 
     private void Start()
     {
-        
+        if (_camera == null)
+        {
+            _camera = Camera.main;
+        }
     }
 
     private void FixedUpdate()
