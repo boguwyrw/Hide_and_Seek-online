@@ -29,11 +29,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 _movement;
     private Vector3 _moveDirection;
 
+    public Transform ViewPoint {  get { return _viewPoint; } }
+
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         _currentSpeed = _walkSpeed;
     }
 
@@ -43,10 +42,7 @@ public class PlayerController : MonoBehaviour
 
         PlayerRotation();
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _canJump = true;
-        }
+        ReleaseJump();
     }
 
     private void FixedUpdate()
@@ -94,6 +90,14 @@ public class PlayerController : MonoBehaviour
         _verticalRotation += _mouseInput.y;
         _verticalRotation = Mathf.Clamp(_verticalRotation, -_maxVerticalRotation, _maxVerticalRotation);
         _viewPoint.rotation = Quaternion.Euler(-_verticalRotation, cameraRotation.y, cameraRotation.z);
+    }
+
+    private void ReleaseJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _canJump = true;
+        }
     }
 
     private void PlayerJump()
