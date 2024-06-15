@@ -5,14 +5,24 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform _viewPoint;
+    [SerializeField] private Transform _camera;
+
+    [SerializeField] private Rigidbody _rigidbody;
+
+    private int _groundedNumber = 6;
 
     private float _mouseSensitivity = 1.4f;
     private float _maxVerticalRotation = 75.0f;
     private float _verticalRotation = 0.0f;
 
     private float _walkSpeed = 4.0f;
-    private float _runSpeed = 16.0f;
+    private float _runSpeed = 12.0f;
     private float _currentSpeed = 0.0f;
+
+    private float _jumpForce = 5.0f;
+
+    private bool _canJump = false;
+    private bool _isGrounded = true;
 
     private Vector2 _mouseInput;
 
@@ -32,6 +42,21 @@ public class PlayerController : MonoBehaviour
         PlayerMovement();
 
         PlayerRotation();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _canJump = true;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        PlayerJump();
+    }
+
+    private void LateUpdate()
+    {
+        CameraFollow();
     }
 
     private void PlayerMovement()
@@ -69,5 +94,29 @@ public class PlayerController : MonoBehaviour
         _verticalRotation += _mouseInput.y;
         _verticalRotation = Mathf.Clamp(_verticalRotation, -_maxVerticalRotation, _maxVerticalRotation);
         _viewPoint.rotation = Quaternion.Euler(-_verticalRotation, cameraRotation.y, cameraRotation.z);
+    }
+
+    private void PlayerJump()
+    {
+        if (_canJump && _isGrounded)
+        {
+            _canJump = false;
+            _isGrounded = false;
+            _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private void CameraFollow()
+    {
+        _camera.position = _viewPoint.position;
+        _camera.rotation = _viewPoint.rotation;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == _groundedNumber)
+        {
+            _isGrounded = true;
+        }
     }
 }
