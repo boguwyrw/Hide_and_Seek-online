@@ -49,6 +49,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_Text _roomNameText;
     [SerializeField] private TMP_Text _playerNameText;
 
+    [SerializeField] private int _gameSceneIndex = 1;
+
     private bool _hasNickName = false;
 
     private List<RoomButton> _roomButtons = new List<RoomButton>();
@@ -285,7 +287,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
-        PhotonNetwork.LoadLevel(1);
+        PhotonNetwork.LoadLevel(_gameSceneIndex);
     }
     #endregion
 }
