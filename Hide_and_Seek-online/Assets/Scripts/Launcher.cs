@@ -8,6 +8,7 @@ using WebSocketSharp;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    #region Launcher Instance
     public static Launcher Instance;
 
     private void Awake()
@@ -21,6 +22,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             Instance = this;
         }
     }
+    #endregion
 
     private readonly string CONNECTING = "Connecting to Network ...";
     private readonly string JOINING_LOBBY = "Joining lobby ...";
@@ -35,6 +37,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _createPlayerNamePanel;
     [SerializeField] private GameObject _roomPanel;
     [SerializeField] private GameObject _roomBrowserPanel;
+    [SerializeField] private GameObject _startGameButton;
 
     [SerializeField] private RoomButton _roomButton;
 
@@ -52,6 +55,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private List<TMP_Text> _playersNames = new List<TMP_Text>();
 
+    #region MonoBehaviour methods
     private void Start()
     {
         CloseMenus();
@@ -61,7 +65,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         PhotonNetwork.ConnectUsingSettings();
     }
+    #endregion
 
+    #region private methods
     private void CloseMenus()
     {
         _buttonsPanel.SetActive(false);
@@ -73,9 +79,50 @@ public class Launcher : MonoBehaviourPunCallbacks
         _roomBrowserPanel.SetActive(false);
     }
 
+    private void PlayersInGame()
+    {
+        foreach (TMP_Text playerName in _playersNames)
+        {
+            Destroy(playerName.gameObject);
+        }
+        _playersNames.Clear();
+
+        _playerNameText.gameObject.SetActive(false);
+
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            CreatePlayerNameText(players[i]);
+        }
+    }
+
+    private void CreatePlayerNameText(Player player)
+    {
+        TMP_Text nameText = Instantiate(_playerNameText, _playerNameText.transform.parent);
+        nameText.text = player.NickName;
+        nameText.gameObject.SetActive(true);
+
+        _playersNames.Add(nameText);
+    }
+
+    private void SwitchMaster()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _startGameButton.SetActive(true);
+        }
+        else
+        {
+            _startGameButton.SetActive(false);
+        }
+    }
+    #endregion
+
+    #region Photon override methods
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
+        PhotonNetwork.AutomaticallySyncScene = true;
 
         _loadingText.text = JOINING_LOBBY;
     }
@@ -101,6 +148,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         _roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
         PlayersInGame();
+
+        SwitchMaster();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -151,32 +200,13 @@ public class Launcher : MonoBehaviourPunCallbacks
         PlayersInGame();
     }
 
-    private void PlayersInGame()
+    public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        foreach(TMP_Text playerName in _playersNames)
-        {
-            Destroy(playerName.gameObject);
-        }
-        _playersNames.Clear();
-
-        _playerNameText.gameObject.SetActive(false);
-
-        Player[] players = PhotonNetwork.PlayerList;
-        for (int i = 0; i < players.Length; i++)
-        {
-            CreatePlayerNameText(players[i]);
-        }
+        SwitchMaster();
     }
+    #endregion
 
-    private void CreatePlayerNameText(Player player)
-    {
-        TMP_Text nameText = Instantiate(_playerNameText, _playerNameText.transform.parent);
-        nameText.text = player.NickName;
-        nameText.gameObject.SetActive(true);
-
-        _playersNames.Add(nameText);
-    }
-
+    #region public methods
     public void OpenCreateRoomPanel()
     {
         CloseMenus();
@@ -252,4 +282,10 @@ public class Launcher : MonoBehaviourPunCallbacks
             _hasNickName = true;
         }
     }
+
+    public void StartGameButton()
+    {
+        PhotonNetwork.LoadLevel(1);
+    }
+    #endregion
 }
