@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerVisionController : MonoBehaviour
+public class PlayerVisionController : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Camera _camera;
 
@@ -23,14 +23,14 @@ public class PlayerVisionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (gameObject.GetPhotonView().IsMine)
+        if (photonView.IsMine)
         {
             Ray ray = _camera.ViewportPointToRay(_hitPosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, _visionLength, _hitLayer))
             {
                 PhotonView seenPlayerPhotonView = hit.collider.gameObject.GetPhotonView();
-                seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, gameObject.GetPhotonView().Owner.NickName);
+                seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, photonView.Owner.NickName);
             }
         }
     }
@@ -43,7 +43,7 @@ public class PlayerVisionController : MonoBehaviour
 
     private void PlayerRecognized(string observer)
     {
-        string playerName = gameObject.GetPhotonView().Owner.NickName;
+        string playerName = photonView.Owner.NickName;
         Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
     }
 }

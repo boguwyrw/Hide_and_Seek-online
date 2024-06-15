@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private float _jumpForce = 5.0f;
 
     private bool _canJump = false;
+    private bool _isSeen = false;
     private bool _isGrounded = true;
 
     private Vector2 _mouseInput;
@@ -84,9 +85,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             _currentSpeed = _runSpeed;
         }
-        else
+        else if (!_isSeen)
         {
             _currentSpeed = _walkSpeed;
+        }
+        else
+        {
+            _currentSpeed = 0.0f;
         }
 
         transform.position += _movement * _currentSpeed * Time.deltaTime;
@@ -137,5 +142,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             _isGrounded = true;
         }
+    }
+
+    public void SetIsSeen()
+    {
+        _isSeen = true;
     }
 }
