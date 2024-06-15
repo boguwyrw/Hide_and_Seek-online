@@ -17,9 +17,9 @@ GameObject:
   - component: {fileID: 9015432276413600704}
   - component: {fileID: 123976540577855751}
   - component: {fileID: 7367180292801522592}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
   _camera: {fileID: 0}
   _hitLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
 --- !u!114 &123976540577855751
 MonoBehaviour:
   m_ObjectHideFlags: 0

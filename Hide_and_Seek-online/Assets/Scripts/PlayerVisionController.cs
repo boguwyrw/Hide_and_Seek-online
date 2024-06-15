@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerVisionController : MonoBehaviour
 {
@@ -22,11 +23,27 @@ public class PlayerVisionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Ray ray = _camera.ViewportPointToRay(_hitPosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, _visionLength, _hitLayer))
+        if (gameObject.GetPhotonView().IsMine)
         {
-            Debug.Log("Did Hit " + hit.collider.name);
+            Ray ray = _camera.ViewportPointToRay(_hitPosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, _visionLength, _hitLayer))
+            {
+                PhotonView seenPlayerPhotonView = hit.collider.gameObject.GetPhotonView();
+                seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, gameObject.GetPhotonView().Owner.NickName);
+            }
         }
+    }
+
+    [PunRPC]
+    private void PlayerRecognizedRPC(string observerName)
+    {
+        PlayerRecognized(observerName);
+    }
+
+    private void PlayerRecognized(string observer)
+    {
+        string playerName = gameObject.GetPhotonView().Owner.NickName;
+        Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
     }
 }
