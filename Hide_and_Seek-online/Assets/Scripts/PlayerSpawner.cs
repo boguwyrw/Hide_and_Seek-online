@@ -25,6 +25,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private GameObject _player;
 
+    private float _hasBeenFoundLifetime => GameManager.Instance.FoundLifetime;
+
     private void Start()
     {
         if (PhotonNetwork.IsConnected)
@@ -53,7 +55,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private IEnumerator CoPlayerHasBeenFound()
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(_hasBeenFoundLifetime);
         UIController.Instance.OpenCloseFoundPanel(isOpen: false);
     }
 }

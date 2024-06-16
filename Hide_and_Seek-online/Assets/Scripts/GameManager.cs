@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int _mainMenuSceneIndex = 0;
 
+    private float _foundLifetime = 5.0f;
+
+    public float FoundLifetime { get { return _foundLifetime; } }
+
     private void Start()
     {
         if (!PhotonNetwork.IsConnected)
