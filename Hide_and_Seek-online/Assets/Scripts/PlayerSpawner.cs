@@ -40,4 +40,20 @@ public class PlayerSpawner : MonoBehaviour
 
         _player = PhotonNetwork.Instantiate(_playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
     }
+
+    public void PlayerHasBeenFound(string playerWhoFound)
+    {
+        UIController.Instance.PlayerNameWhoFound(playerWhoFound);
+
+        if (_player != null)
+        {
+            StartCoroutine(CoPlayerHasBeenFound());
+        }
+    }
+
+    private IEnumerator CoPlayerHasBeenFound()
+    {
+        yield return new WaitForSeconds(5.0f);
+        UIController.Instance.OpenCloseFoundPanel(isOpen: false);
+    }
 }

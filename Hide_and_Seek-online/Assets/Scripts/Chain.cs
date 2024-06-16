@@ -8,8 +8,8 @@ public class Chain : MonoBehaviour
 
     private int _playerLayer = 7;
 
-    private float _chainLifetime = 4.0f;
-    private float _chainRotationSpeed = 2.0f;
+    private float _chainLifetime = 5.0f;
+    private float _chainRotationSpeed = 1.80f;
 
     private void Start()
     {

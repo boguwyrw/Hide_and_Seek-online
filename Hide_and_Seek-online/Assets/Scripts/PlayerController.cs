@@ -148,4 +148,11 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         _isSeen = true;
     }
+
+    public void PlayerRecognizedSpeed(float speedValue)
+    {
+        _runSpeed = speedValue;
+        _walkSpeed = speedValue;
+        _currentSpeed = speedValue;
+    }
 }
