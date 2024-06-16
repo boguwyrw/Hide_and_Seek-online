@@ -25,6 +25,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private GameObject _player;
 
+    private bool _playerIsSeeker = false;
+
     private float _hasBeenFoundLifetime => GameManager.Instance.FoundLifetime;
 
     private void Start()
@@ -37,7 +39,16 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        int randomPoint = Random.Range(0, _spawnPoints.Length);
+        int randomPoint = -1;
+        if (_playerIsSeeker)
+        {
+            randomPoint = 0;
+        }
+        else
+        {
+            randomPoint = Random.Range(1, _spawnPoints.Length);
+        }
+
         Transform spawnPoint = _spawnPoints[randomPoint];
 
         _player = PhotonNetwork.Instantiate(_playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
