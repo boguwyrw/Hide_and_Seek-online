@@ -172,6 +172,7 @@ MonoBehaviour:
   _hitLayer:
     serializedVersion: 2
     m_Bits: 128
+  _chain: {fileID: 6736210181445032332, guid: 7ce63e4c2c8916c4dbfde370913f2c25, type: 3}
 --- !u!114 &123976540577855751
 MonoBehaviour:
   m_ObjectHideFlags: 0
