@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public static GameManager Instance;
 
@@ -22,7 +24,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private int _mainMenuSceneIndex = 0;
 
+    private int _ourIndex = -1;
+
     private float _foundLifetime = 5.0f;
+
+    private List<PlayerInfo> _allPlayers = new List<PlayerInfo>();
 
     public float FoundLifetime { get { return _foundLifetime; } }
 
@@ -32,10 +38,100 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(_mainMenuSceneIndex);
         }
+        else
+        {
+            SendNewPlayer(PhotonNetwork.NickName);
+        }
     }
 
     private void Update()
     {
         
+    }
+
+    public override void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    public override void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    public void OnEvent(EventData eventData)
+    {
+        if (eventData.Code < 200)
+        {
+            GameEventCodes gameEventCode = (GameEventCodes)eventData.Code;
+            object[] data = (object[])eventData.CustomData;
+
+            switch(gameEventCode)
+            {
+                case GameEventCodes.PlayerNew:
+                    ReceiveNewPlayer(data);
+                    break;
+                case GameEventCodes.ListPlayers:
+                    ReceiveListPlayers(data);
+                    break;
+                case GameEventCodes.ChangeStatus:
+                    ReceiveChangeStatus(data);
+                    break;
+            }
+        }
+    }
+
+    public void SendNewPlayer(string username)
+    {
+        Player[] players = PhotonNetwork.PlayerList;
+        int playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+
+        int randomSeeker = Random.Range(0, players.Length);
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (playerActorNumber == players[i].ActorNumber)
+            {
+                _ourIndex = i;
+            }
+        }
+
+        object[] dataPackage = new object[3]; // 3 - PlayerInfo variables
+        dataPackage[0] = username;
+        dataPackage[1] = playerActorNumber;
+        if (_ourIndex == randomSeeker)
+            dataPackage[2] = true;
+        else dataPackage[2] = false;
+
+        PhotonNetwork.RaiseEvent((byte)GameEventCodes.PlayerNew, dataPackage,
+            new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
+            new SendOptions { Reliability = true});
+    }
+
+    public void ReceiveNewPlayer(object[] receivedData)
+    {
+        PlayerInfo playerInfo = new PlayerInfo((string)receivedData[0], (int)receivedData[1], (bool)receivedData[2]);
+
+        _allPlayers.Add(playerInfo);
+    }
+
+    public void SendListPlayers()
+    {
+
+    }
+
+    public void ReceiveListPlayers(object[] receivedData)
+    {
+
+    }
+
+    public void SendChangeStatus()
+    {
+
+    }
+
+    public void ReceiveChangeStatus(object[] receivedData)
+    {
+
     }
 }

@@ -92,6 +92,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         _playerNameText.gameObject.SetActive(false);
 
         Player[] players = PhotonNetwork.PlayerList;
+        //int randomSeeker = Random.Range(0, players.Length);
         for (int i = 0; i < players.Length; i++)
         {
             CreatePlayerNameText(players[i]);

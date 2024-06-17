@@ -68,5 +68,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(_hasBeenFoundLifetime);
         UIController.Instance.OpenCloseFoundPanel(isOpen: false);
+        PlayerController playerController = _player.GetComponent<PlayerController>();
+        playerController.RestorePlayerSpeed();
     }
 }
