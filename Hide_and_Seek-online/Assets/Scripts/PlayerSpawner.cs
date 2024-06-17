@@ -39,6 +39,7 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayer()
     {
+        _playerIsSeeker = GameManager.Instance.IsSeeker();
         int randomPoint = -1;
         if (_playerIsSeeker)
         {

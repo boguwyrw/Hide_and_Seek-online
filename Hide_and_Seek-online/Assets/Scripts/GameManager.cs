@@ -83,8 +83,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void SendNewPlayer(string username)
     {
-        Player[] players = PhotonNetwork.PlayerList;
         int playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+        /*
+        Player[] players = PhotonNetwork.PlayerList;
 
         int randomSeeker = Random.Range(0, players.Length);
 
@@ -95,14 +96,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 _ourIndex = i;
             }
         }
-
+        */
         object[] dataPackage = new object[3]; // 3 - PlayerInfo variables
         dataPackage[0] = username;
         dataPackage[1] = playerActorNumber;
+        dataPackage[2] = false; // replace correct value
+        /*
         if (_ourIndex == randomSeeker)
             dataPackage[2] = true;
         else dataPackage[2] = false;
-
+        */
         PhotonNetwork.RaiseEvent((byte)GameEventCodes.PlayerNew, dataPackage,
             new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
             new SendOptions { Reliability = true});
@@ -133,5 +136,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void ReceiveChangeStatus(object[] receivedData)
     {
 
+    }
+
+    public bool IsSeeker()
+    {
+        return _allPlayers[_ourIndex].IsPlayerSeeker;
     }
 }
