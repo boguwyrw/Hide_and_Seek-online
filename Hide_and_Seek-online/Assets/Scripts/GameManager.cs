@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void SendNewPlayer(string username)
     {
         int playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-        /*
+        
         Player[] players = PhotonNetwork.PlayerList;
 
         int randomSeeker = Random.Range(0, players.Length);
@@ -96,16 +96,16 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 _ourIndex = i;
             }
         }
-        */
+        
         object[] dataPackage = new object[3]; // 3 - PlayerInfo variables
         dataPackage[0] = username;
         dataPackage[1] = playerActorNumber;
-        dataPackage[2] = false; // replace correct value
-        /*
+        //dataPackage[2] = false; // replace correct value
+        
         if (_ourIndex == randomSeeker)
             dataPackage[2] = true;
         else dataPackage[2] = false;
-        */
+        
         PhotonNetwork.RaiseEvent((byte)GameEventCodes.PlayerNew, dataPackage,
             new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient },
             new SendOptions { Reliability = true});
@@ -116,16 +116,40 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         PlayerInfo playerInfo = new PlayerInfo((string)receivedData[0], (int)receivedData[1], (bool)receivedData[2]);
 
         _allPlayers.Add(playerInfo);
+
+        SendListPlayers();
     }
 
     public void SendListPlayers()
     {
+        object[] packageList = new object[_allPlayers.Count];
 
+        for (int i = 0; i < _allPlayers.Count; i++)
+        {
+            object[] packagePart = new object[3]; // 3 - PlayerInfo variables
+            packagePart[0] = _allPlayers[i].PlayerName;
+            packagePart[1] = _allPlayers[i].PlayerActor;
+            packagePart[2] = _allPlayers[i].IsPlayerSeeker;
+
+            packageList[i] = packagePart;
+        }
+
+        PhotonNetwork.RaiseEvent((byte)GameEventCodes.ListPlayers, packageList,
+            new RaiseEventOptions { Receivers = ReceiverGroup.All },
+            new SendOptions { Reliability = true });
     }
 
     public void ReceiveListPlayers(object[] receivedData)
     {
+        _allPlayers.Clear();
 
+        for (int i = 0; i < receivedData.Length; i++)
+        {
+            object[] dataPart = (object[])receivedData[i];
+
+            PlayerInfo playerInfo = new PlayerInfo((string)dataPart[0], (int)dataPart[1], (bool)dataPart[3]);
+            _allPlayers.Add(playerInfo);
+        }
     }
 
     public void SendChangeStatus()
