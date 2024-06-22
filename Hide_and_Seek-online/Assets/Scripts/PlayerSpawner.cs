@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerSpawner : MonoBehaviour
 {
@@ -39,7 +40,21 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        _playerIsSeeker = GameManager.Instance.IsSeeker();
+        //_playerIsSeeker = GameManager.Instance.IsSeeker();
+
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (DataManager.Instance.SeekerIndex == i)
+            {
+                _playerIsSeeker = true;
+            }
+            else
+            {
+                _playerIsSeeker = false;
+            }
+        }
+
         int randomPoint = -1;
         if (_playerIsSeeker)
         {
