@@ -24,9 +24,11 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     [SerializeField] private int _mainMenuSceneIndex = 0;
 
-    private int _ourIndex = -1;
+    private int _ourIndex;
 
     private float _foundLifetime = 5.0f;
+
+    private bool _isSeeker = false;
 
     private List<PlayerInfo> _allPlayers = new List<PlayerInfo>();
 
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Start()
     {
+        /*
         if (!PhotonNetwork.IsConnected)
         {
             SceneManager.LoadScene(_mainMenuSceneIndex);
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             SendNewPlayer(PhotonNetwork.NickName);
         }
+        */
     }
 
     private void Update()
@@ -84,16 +88,19 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public void SendNewPlayer(string username)
     {
         int playerActorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-        
+        //Debug.Log("playerActorNumber: " + playerActorNumber);
         Player[] players = PhotonNetwork.PlayerList;
 
         int randomSeeker = Random.Range(0, players.Length);
 
         for (int i = 0; i < players.Length; i++)
         {
+            //Debug.Log(i + " - players: " + players[i].ActorNumber);
             if (playerActorNumber == players[i].ActorNumber)
             {
                 _ourIndex = i;
+                //Debug.Log("_ourIndex: " + _ourIndex);
+                _isSeeker = true;
             }
         }
         
@@ -118,6 +125,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         _allPlayers.Add(playerInfo);
 
         SendListPlayers();
+        //Debug.Log(_allPlayers.Count);
     }
 
     public void SendListPlayers()
@@ -147,7 +155,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             object[] dataPart = (object[])receivedData[i];
 
-            PlayerInfo playerInfo = new PlayerInfo((string)dataPart[0], (int)dataPart[1], (bool)dataPart[3]);
+            PlayerInfo playerInfo = new PlayerInfo((string)dataPart[0], (int)dataPart[1], (bool)dataPart[2]);
             _allPlayers.Add(playerInfo);
         }
     }
@@ -164,6 +172,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public bool IsSeeker()
     {
-        return _allPlayers[_ourIndex].IsPlayerSeeker;
+        //return _allPlayers[_ourIndex].IsPlayerSeeker;
+        return _isSeeker;
     }
 }

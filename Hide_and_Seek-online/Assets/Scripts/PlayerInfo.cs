@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerInfo
 {
-    public string PlayerName;
-    public int PlayerActor;
-    public bool IsPlayerSeeker;
+    public string PlayerName { get; private set; }
+    public int PlayerActor { get; private set; }
+    public bool IsPlayerSeeker { get; private set; }
 
     public PlayerInfo(string playerName, int playerActor, bool isPlayerSeeker)
     {

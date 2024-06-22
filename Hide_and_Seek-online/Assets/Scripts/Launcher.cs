@@ -96,6 +96,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Length; i++)
         {
             CreatePlayerNameText(players[i]);
+            GameManager.Instance.SendNewPlayer(players[i].NickName);
         }
     }
 
@@ -288,6 +289,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
+        // tutaj zrobiæ losowanie, ktory gracz bedzie szuka³
         PhotonNetwork.LoadLevel(_gameSceneIndex);
     }
     #endregion
