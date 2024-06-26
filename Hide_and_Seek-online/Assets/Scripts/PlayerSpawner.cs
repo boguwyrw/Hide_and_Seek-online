@@ -40,12 +40,10 @@ public class PlayerSpawner : MonoBehaviour
 
     private void SpawnPlayer()
     {
-        //_playerIsSeeker = GameManager.Instance.IsSeeker();
-
         Player[] players = PhotonNetwork.PlayerList;
         for (int i = 0; i < players.Length; i++)
         {
-            if (DataManager.Instance.SeekerIndex == i)
+            if (GameManager.Instance.SeekerIndex == i)
             {
                 _playerIsSeeker = true;
             }
