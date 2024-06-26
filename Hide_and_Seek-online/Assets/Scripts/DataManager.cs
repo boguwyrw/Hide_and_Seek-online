@@ -23,10 +23,6 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private List<PlayerInfo> _allPlayers = new List<PlayerInfo>();
 
-    //private int _seekerIndex = -1;
-
-    //public int SeekerIndex {  get { return _seekerIndex; } }
-
     public override void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -41,18 +37,41 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         if (eventData.Code < 200)
         {
+            EGameEventCodes gameEventCode = (EGameEventCodes)eventData.Code;
             object[] data = (object[])eventData.CustomData;
 
-            ReceivePlayers(data);
+            switch (gameEventCode)
+            {
+                case EGameEventCodes.NewPlayerInGame:
+                    ReceiveNewPlayer(data);
+                    break;
+
+                case EGameEventCodes.AllPlayersInGame:
+                    ReceiveAllPlayers(data);
+                    break;
+
+                case EGameEventCodes.UpdatePlayerStats:
+                    ReceiveUpdatePlayerStats(data);
+                    break;
+            }
+
         }
     }
 
-    public void SendPlayers()
+    public void SendNewPlayer()
+    {
+
+    }
+
+    public void ReceiveNewPlayer(object[] receivedData)
+    {
+
+    }
+
+    public void SendAllPlayers()
     {
         Player[] allPlayers = PhotonNetwork.PlayerList;
         object[] packageList = new object[allPlayers.Length];
-
-        //int randomSeeker = Random.Range(0, allPlayers.Length);
 
         for (int i = 0; i < allPlayers.Length; i++)
         {
@@ -61,17 +80,7 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
             packagePart[1] = allPlayers[i].ActorNumber;
             packagePart[2] = false;
             packagePart[3] = false;
-            /*
-            if (randomSeeker == i)
-            {
-                _seekerIndex = i;
-                packagePart[2] = true;
-            }
-            else
-            {
-                packagePart[2] = false;
-            }
-            */
+
             packageList[i] = packagePart;
         }
 
@@ -80,7 +89,7 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
             new SendOptions { Reliability = true });
     }
 
-    public void ReceivePlayers(object[] receivedData)
+    public void ReceiveAllPlayers(object[] receivedData)
     {
         _allPlayers.Clear();
 
@@ -91,5 +100,15 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
             PlayerInfo playerInfo = new PlayerInfo((string)dataPart[0], (int)dataPart[1], (bool)dataPart[2], (bool)dataPart[3]);
             _allPlayers.Add(playerInfo);
         }
+    }
+
+    public void SendUpdatePlayerStats()
+    {
+
+    }
+
+    public void ReceiveUpdatePlayerStats(object[] receivedData)
+    {
+
     }
 }

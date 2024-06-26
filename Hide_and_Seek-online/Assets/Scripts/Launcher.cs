@@ -288,7 +288,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
-        DataManager.Instance.SendPlayers();
+        DataManager.Instance.SendAllPlayers();
 
         PhotonNetwork.LoadLevel(_gameSceneIndex);
     }

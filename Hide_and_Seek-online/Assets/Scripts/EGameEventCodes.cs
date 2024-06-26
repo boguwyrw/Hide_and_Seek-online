@@ -1,4 +1,6 @@
 public enum EGameEventCodes : byte
 {
-    AllPlayersInGame
+    NewPlayerInGame,
+    AllPlayersInGame,
+    UpdatePlayerStats
 }
