@@ -28,7 +28,7 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && PlayerSpawner.Instance.PlayerIsSeeker)
         {
             _canUseChain = true;
         }

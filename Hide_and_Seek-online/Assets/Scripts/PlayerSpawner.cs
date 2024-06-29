@@ -30,6 +30,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private float _hasBeenFoundLifetime => GameManager.Instance.FoundLifetime;
 
+    public bool PlayerIsSeeker { get { return _playerIsSeeker; } }
+
     private void Start()
     {
         if (PhotonNetwork.IsConnected)

@@ -288,8 +288,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
-        GameManager.Instance.RandonSeekerIndexGenerator();
-
         PhotonNetwork.LoadLevel(_gameSceneIndex);
     }
     #endregion
