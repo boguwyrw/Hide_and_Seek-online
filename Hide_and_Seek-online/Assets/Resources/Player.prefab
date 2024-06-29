@@ -156,6 +156,7 @@ MonoBehaviour:
   _viewPoint: {fileID: 6876643472471404350}
   _camera: {fileID: 0}
   _rigidbody: {fileID: 4969754421665834646}
+  _renderer: {fileID: 2561565766658280139}
 --- !u!114 &9015432276413600704
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             Instance = this;
         }
 
-        RandonSeekerIndexGenerator();
+        //RandonSeekerIndexGenerator();
     }
 
     [SerializeField] private int _mainMenuSceneIndex = 0;

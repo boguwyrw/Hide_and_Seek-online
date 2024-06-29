@@ -53,9 +53,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private bool _hasNickName = false;
 
+    private int _seekerIndex = -1;
+
     private List<RoomButton> _roomButtons = new List<RoomButton>();
 
     private List<TMP_Text> _playersNames = new List<TMP_Text>();
+
+    public int SeekerIndex { get { return _seekerIndex; } }
 
     #region MonoBehaviour methods
     private void Start()
@@ -288,7 +292,31 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
+        /*
+        Player[] allPlayers = PhotonNetwork.PlayerList;
+        _seekerIndex = Random.Range(0, allPlayers.Length);
+        */
+
+        SelectRandomSeeker();
+
         PhotonNetwork.LoadLevel(_gameSceneIndex);
     }
     #endregion
+
+    private void SelectRandomSeeker()
+    {
+        Player[] players = PhotonNetwork.PlayerList;
+        int playerCount = players.Length;
+        int randomIndex = Random.Range(0, playerCount);
+        Player randomPlayer = PhotonNetwork.PlayerList[randomIndex];
+        
+        for (int i = 0; i < playerCount; i++)
+        {
+            if (players[i].UserId == randomPlayer.UserId)
+            {
+                PhotonNetwork.PlayerList[i].TagObject = "Seeker";
+            }
+        }
+        
+    }
 }

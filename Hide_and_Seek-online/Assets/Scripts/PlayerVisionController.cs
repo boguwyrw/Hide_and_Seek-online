@@ -67,7 +67,7 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             string playerName = photonView.Owner.NickName;
-            Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
+            //Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
 
             PlayerSpawner.Instance.PlayerHasBeenFound(observer);
             DataManager.Instance.SendUpdatePlayerStats(actorNo: observerNo, actionIndex: 1, isSeeker: false, isCatch: true);

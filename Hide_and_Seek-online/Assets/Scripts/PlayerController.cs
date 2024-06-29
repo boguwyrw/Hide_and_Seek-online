@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     [SerializeField] private Rigidbody _rigidbody;
 
+    [SerializeField] private Renderer _renderer;
+
     private int _groundedNumber = 6;
 
     private float _mouseSensitivity = 1.4f;
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 _movement;
     private Vector3 _moveDirection;
 
+    private Color[] _colors = new Color[] { Color.red, Color.green, Color.blue, Color.gray, Color.cyan, Color.black};
+
     public Transform ViewPoint { get { return _viewPoint; } }
 
     private void Start()
@@ -40,6 +44,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
 
         _currentSpeed = _walkSpeed;
+
+        int randomColor = Random.Range(1, _colors.Length);
+        _renderer.material.color = _colors[randomColor];
     }
 
     private void Update()
@@ -150,5 +157,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         _walkSpeed = 4.0f;
         _runSpeed = 12.0f;
+    }
+
+    public void PlayerColor(bool isSeeker)
+    {
+        if (isSeeker)
+        {
+            _renderer.material.color = _colors[0];
+        }
     }
 }

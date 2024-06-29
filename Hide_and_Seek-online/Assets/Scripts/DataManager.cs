@@ -92,8 +92,8 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
             object[] packagePart = new object[4]; // 4 - PlayerInfo variables
             packagePart[0] = _allPlayers[i].PlayerName;
             packagePart[1] = _allPlayers[i].PlayerActor;
-            packagePart[2] = false;
-            packagePart[3] = false;
+            packagePart[2] = _allPlayers[i].IsPlayerSeeker;
+            packagePart[3] = _allPlayers[i].IsPlayerCatch;
 
             packageList[i] = packagePart;
         }
@@ -110,7 +110,6 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
         for (int i = 0; i < receivedData.Length; i++)
         {
             object[] dataPart = (object[])receivedData[i];
-
             PlayerInfo playerInfo = new PlayerInfo((string)dataPart[0], (int)dataPart[1], (bool)dataPart[2], (bool)dataPart[3]);
             _allPlayers.Add(playerInfo);
 
@@ -150,6 +149,11 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     case 1: // catch player
                         _allPlayers[i].IsPlayerCatch = true;
                         break;
+                }
+
+                if (i == _playerIndex)
+                {
+
                 }
 
                 break;

@@ -28,6 +28,8 @@ public class PlayerSpawner : MonoBehaviour
 
     private bool _playerIsSeeker = false;
 
+    //private Dictionary<int, bool> _oneOfSeekers = new Dictionary<int, bool>();
+
     private float _hasBeenFoundLifetime => GameManager.Instance.FoundLifetime;
 
     public bool PlayerIsSeeker { get { return _playerIsSeeker; } }
@@ -44,15 +46,17 @@ public class PlayerSpawner : MonoBehaviour
     private void SpawnPlayer()
     {
         Player[] players = PhotonNetwork.PlayerList;
-        for (int i = 0; i < players.Length; i++)
+
+        foreach (Player p in players)
         {
-            if (GameManager.Instance.SeekerIndex == i)
+            Debug.Log(p.TagObject);
+            if (p.TagObject != null)
             {
-                _playerIsSeeker = true;
-            }
-            else
-            {
-                _playerIsSeeker = false;
+                string playerTag = p.TagObject.ToString();
+                if (playerTag.Equals("Seeker"))
+                {
+                    _playerIsSeeker = true;
+                }
             }
         }
 
@@ -69,6 +73,10 @@ public class PlayerSpawner : MonoBehaviour
         Transform spawnPoint = _spawnPoints[randomPoint];
 
         _player = PhotonNetwork.Instantiate(_playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+
+        PlayerController playerController = _player.GetComponent<PlayerController>();
+        playerController.PlayerColor(_playerIsSeeker);
+
         DataManager.Instance.SendUpdatePlayerStats(actorNo: PhotonNetwork.LocalPlayer.ActorNumber, actionIndex: 0, isSeeker: true, isCatch: false);
     }
 
