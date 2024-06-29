@@ -21,14 +21,6 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private void Start()
-    {
-        if (PhotonNetwork.IsConnected)
-        {
-            SendNewPlayer(PhotonNetwork.NickName);
-        }
-    }
-
     private List<PlayerInfo> _allPlayers = new List<PlayerInfo>();
 
     private int _playerIndex = -1;
@@ -92,7 +84,6 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void SendAllPlayers()
     {
-        //Player[] allPlayers = PhotonNetwork.PlayerList;
         int numberOfPlayers = _allPlayers.Count;
         object[] packageList = new object[numberOfPlayers];
 
@@ -160,6 +151,8 @@ public class DataManager : MonoBehaviourPunCallbacks, IOnEventCallback
                         _allPlayers[i].IsPlayerCatch = true;
                         break;
                 }
+
+                break;
             }
         }
     }

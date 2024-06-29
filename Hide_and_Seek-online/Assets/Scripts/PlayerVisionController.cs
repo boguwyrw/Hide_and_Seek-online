@@ -50,19 +50,19 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
                     PhotonNetwork.Instantiate(_chain.name, hitPlayer.transform.position, Quaternion.identity);
 
                     PhotonView seenPlayerPhotonView = hitPlayer.GetPhotonView();
-                    seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, photonView.Owner.NickName, _playerSlowSpeed);
+                    seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, photonView.Owner.NickName, PhotonNetwork.LocalPlayer.ActorNumber, _playerSlowSpeed);
                 }
             }
         }
     }
 
     [PunRPC]
-    private void PlayerRecognizedRPC(string observerName, float playerSlowSpeed)
+    private void PlayerRecognizedRPC(string observerName, int observerActorNo, float playerSlowSpeed)
     {
-        PlayerRecognized(observerName, playerSlowSpeed);
+        PlayerRecognized(observerName, observerActorNo, playerSlowSpeed);
     }
 
-    private void PlayerRecognized(string observer, float slowSpeed)
+    private void PlayerRecognized(string observer, int observerNo, float slowSpeed)
     {
         if (photonView.IsMine)
         {
@@ -70,6 +70,7 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
             Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
 
             PlayerSpawner.Instance.PlayerHasBeenFound(observer);
+            DataManager.Instance.SendUpdatePlayerStats(actorNo: observerNo, actionIndex: 1, isSeeker: false, isCatch: true);
 
             PlayerController playerController = gameObject.GetComponent<PlayerController>();
             playerController.PlayerRecognizedSpeed(slowSpeed);

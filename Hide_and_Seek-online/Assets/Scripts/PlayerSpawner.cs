@@ -34,6 +34,7 @@ public class PlayerSpawner : MonoBehaviour
     {
         if (PhotonNetwork.IsConnected)
         {
+            DataManager.Instance.SendNewPlayer(PhotonNetwork.NickName);
             SpawnPlayer();
         }
     }
@@ -66,6 +67,7 @@ public class PlayerSpawner : MonoBehaviour
         Transform spawnPoint = _spawnPoints[randomPoint];
 
         _player = PhotonNetwork.Instantiate(_playerPrefab.name, spawnPoint.position, spawnPoint.rotation);
+        DataManager.Instance.SendUpdatePlayerStats(actorNo: PhotonNetwork.LocalPlayer.ActorNumber, actionIndex: 0, isSeeker: true, isCatch: false);
     }
 
     public void PlayerHasBeenFound(string playerWhoFound)

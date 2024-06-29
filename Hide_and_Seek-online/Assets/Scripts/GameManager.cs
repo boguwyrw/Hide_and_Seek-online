@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Instance = this;
         }
+
+        RandonSeekerIndexGenerator();
     }
 
     [SerializeField] private int _mainMenuSceneIndex = 0;
@@ -31,17 +33,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        Player[] allPlayers = PhotonNetwork.PlayerList;
-        _seekerIndex = Random.Range(0, allPlayers.Length);
-
         if (!PhotonNetwork.IsConnected)
         {
             SceneManager.LoadScene(_mainMenuSceneIndex);
         }
     }
 
-    private void Update()
+    public void RandonSeekerIndexGenerator()
     {
-        
+        Player[] allPlayers = PhotonNetwork.PlayerList;
+        _seekerIndex = Random.Range(0, allPlayers.Length);
     }
 }
