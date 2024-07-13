@@ -292,11 +292,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void StartGameButton()
     {
-        /*
-        Player[] allPlayers = PhotonNetwork.PlayerList;
-        _seekerIndex = Random.Range(0, allPlayers.Length);
-        */
-
         SelectRandomSeeker();
 
         PhotonNetwork.LoadLevel(_gameSceneIndex);

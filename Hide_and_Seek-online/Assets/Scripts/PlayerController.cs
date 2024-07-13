@@ -7,7 +7,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Transform _viewPoint;
+    [SerializeField] private Transform _viewPoint; // not used
     [SerializeField] private Transform _camera;
 
     [SerializeField] private Rigidbody _rigidbody;
@@ -38,8 +38,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Color[] _colors = new Color[] { Color.red, Color.green, Color.blue, Color.gray, Color.cyan, Color.black};
     private Color _playerColor;
 
-    public Transform ViewPoint { get { return _viewPoint; } }
-
+    #region MonoBehaviour methods
     private void Start()
     {
         if (_camera == null)
@@ -50,21 +49,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
         _currentSpeed = _walkSpeed;
 
         if (_isSeeker)
-            ChangeColor(new Color(1.0f, 0.0f, 0.0f, 1.0f));
-            /*
-        if (photonView.IsMine)
         {
-            if (!_isSeeker)
-            {
-                int randomColor = Random.Range(1, _colors.Length);
-                //photonView.RPC("PlayerColorRPC", RpcTarget.OthersBuffered, (int)_colors[randomColor].r, (int)_colors[randomColor].g, (int)_colors[randomColor].b);
-            }
-            else
-            {
-                photonView.RPC("PlayerColorRPC", RpcTarget.OthersBuffered, (int)_colors[0].r, (int)_colors[0].g, (int)_colors[0].b);
-            }
-        }   
-            */
+            ChangeColor(new Color(1.0f, 0.0f, 0.0f, 1.0f));
+        }
     }
 
     private void Update()
@@ -78,7 +65,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
             ReleaseJump();
         }
     }
-
     private void FixedUpdate()
     {
         if (photonView.IsMine)
@@ -94,7 +80,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
             CameraFollow();
         }
     }
+    #endregion
 
+    #region private methods
     private void PlayerMovement()
     {
         float moveLeftRight = Input.GetAxisRaw("Horizontal");
@@ -156,6 +144,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
         _camera.rotation = _viewPoint.rotation;
     }
 
+    private void ChangeColor(Color newColor)
+    {
+        if (photonView.IsMine)
+        {
+            _playerColor = newColor;
+            UpdatePlayerColor(_playerColor);
+
+            SetPlayerColorProperty(_playerColor);
+        }
+    }
+
+    private void SetPlayerColorProperty(Color color)
+    {
+        Hashtable props = new Hashtable
+        {
+            { "playerColor", color.r }
+        };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+    }
+
+    private void UpdatePlayerColor(Color color)
+    {
+        _renderer.material.color = color;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == _groundedNumber)
@@ -163,21 +176,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
             _isGrounded = true;
         }
     }
-    /*
-    [PunRPC]
-    private void PlayerColorRPC(int r, int g, int b)
-    {
-        PlayerColor(r, g, b);
-    }
+    #endregion
 
-    private void PlayerColor(int r, int g, int b)
-    {
-        if (photonView.IsMine)
-        {
-            _renderer.material.color = new Color32((byte)r, (byte)g, (byte)b, 255);
-        }
-    }
-    */
+    #region public methods
     public void PlayerRecognizedSpeed(float speedValue)
     {
         _runSpeed = speedValue;
@@ -200,27 +201,9 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         _isSeeker = isSeeker;
     }
+    #endregion
 
-    public void ChangeColor(Color newColor)
-    {
-        if (photonView.IsMine)
-        {
-            _playerColor = newColor;
-            UpdatePlayerColor(_playerColor);
-
-            SetPlayerColorProperty(_playerColor);
-        }
-    }
-
-    private void SetPlayerColorProperty(Color color)
-    {
-        Hashtable props = new Hashtable
-        {
-            { "playerColor", color.r }
-        };
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-    }
-
+    #region Photon override methods
     public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
     {
         if (changedProps.ContainsKey("playerColor") && targetPlayer == photonView.Owner)
@@ -230,9 +213,5 @@ public class PlayerController : MonoBehaviourPunCallbacks
             UpdatePlayerColor(_playerColor);
         }
     }
-
-    private void UpdatePlayerColor(Color color)
-    {
-        _renderer.material.color = color;
-    }
+    #endregion
 }

@@ -28,8 +28,6 @@ public class PlayerSpawner : MonoBehaviour
 
     private bool _playerIsSeeker = false;
 
-    //private Dictionary<int, bool> _oneOfSeekers = new Dictionary<int, bool>();
-
     private float _hasBeenFoundLifetime => GameManager.Instance.FoundLifetime;
 
     public bool PlayerIsSeeker { get { return _playerIsSeeker; } }
@@ -49,7 +47,7 @@ public class PlayerSpawner : MonoBehaviour
 
         foreach (Player p in players)
         {
-            Debug.Log(p.TagObject);
+            //Debug.Log(p.TagObject);
             if (p.TagObject != null)
             {
                 string playerTag = p.TagObject.ToString();
