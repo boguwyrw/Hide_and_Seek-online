@@ -315,6 +315,8 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (players[i].UserId == randomPlayer.UserId)
             {
                 PhotonNetwork.PlayerList[i].TagObject = "Seeker";
+                Debug.Log(PhotonNetwork.PlayerList[i].NickName);
+                break;
             }
         }
         

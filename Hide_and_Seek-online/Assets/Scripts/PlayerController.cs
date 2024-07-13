@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviourPunCallbacks
 {
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private bool _canJump = false;
     private bool _isGrounded = true;
+    private bool _isSeeker = false;
 
     private Vector2 _mouseInput;
 
@@ -33,6 +36,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 _moveDirection;
 
     private Color[] _colors = new Color[] { Color.red, Color.green, Color.blue, Color.gray, Color.cyan, Color.black};
+    private Color _playerColor;
 
     public Transform ViewPoint { get { return _viewPoint; } }
 
@@ -45,8 +49,22 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         _currentSpeed = _walkSpeed;
 
-        int randomColor = Random.Range(1, _colors.Length);
-        _renderer.material.color = _colors[randomColor];
+        if (_isSeeker)
+            ChangeColor(new Color(1.0f, 0.0f, 0.0f, 1.0f));
+            /*
+        if (photonView.IsMine)
+        {
+            if (!_isSeeker)
+            {
+                int randomColor = Random.Range(1, _colors.Length);
+                //photonView.RPC("PlayerColorRPC", RpcTarget.OthersBuffered, (int)_colors[randomColor].r, (int)_colors[randomColor].g, (int)_colors[randomColor].b);
+            }
+            else
+            {
+                photonView.RPC("PlayerColorRPC", RpcTarget.OthersBuffered, (int)_colors[0].r, (int)_colors[0].g, (int)_colors[0].b);
+            }
+        }   
+            */
     }
 
     private void Update()
@@ -145,7 +163,21 @@ public class PlayerController : MonoBehaviourPunCallbacks
             _isGrounded = true;
         }
     }
+    /*
+    [PunRPC]
+    private void PlayerColorRPC(int r, int g, int b)
+    {
+        PlayerColor(r, g, b);
+    }
 
+    private void PlayerColor(int r, int g, int b)
+    {
+        if (photonView.IsMine)
+        {
+            _renderer.material.color = new Color32((byte)r, (byte)g, (byte)b, 255);
+        }
+    }
+    */
     public void PlayerRecognizedSpeed(float speedValue)
     {
         _runSpeed = speedValue;
@@ -159,11 +191,48 @@ public class PlayerController : MonoBehaviourPunCallbacks
         _runSpeed = 12.0f;
     }
 
+    public void PlayerRecognizedColor()
+    {
+        _renderer.material.color = new Color32(255, 120, 0, 255);
+    }
+
     public void PlayerColor(bool isSeeker)
     {
-        if (isSeeker)
+        _isSeeker = isSeeker;
+    }
+
+    public void ChangeColor(Color newColor)
+    {
+        if (photonView.IsMine)
         {
-            _renderer.material.color = _colors[0];
+            _playerColor = newColor;
+            UpdatePlayerColor(_playerColor);
+
+            SetPlayerColorProperty(_playerColor);
         }
+    }
+
+    private void SetPlayerColorProperty(Color color)
+    {
+        Hashtable props = new Hashtable
+        {
+            { "playerColor", color.r }
+        };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("playerColor") && targetPlayer == photonView.Owner)
+        {
+            float colorR = (float)changedProps["playerColor"];
+            _playerColor = new Color(colorR, 0.0f, 0.0f, 1.0f);
+            UpdatePlayerColor(_playerColor);
+        }
+    }
+
+    private void UpdatePlayerColor(Color color)
+    {
+        _renderer.material.color = color;
     }
 }

@@ -24,6 +24,11 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
         {
             _camera = Camera.main;
         }
+
+        if (photonView.IsMine)
+        {
+
+        }
     }
 
     private void Update()
@@ -67,13 +72,13 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
         if (photonView.IsMine)
         {
             string playerName = photonView.Owner.NickName;
-            //Debug.Log("Jestem " + playerName + " i zosta³em zauwazony przez " + observer);
 
             PlayerSpawner.Instance.PlayerHasBeenFound(observer);
             DataManager.Instance.SendUpdatePlayerStats(actorNo: observerNo, actionIndex: 1, isSeeker: false, isCatch: true);
 
             PlayerController playerController = gameObject.GetComponent<PlayerController>();
             playerController.PlayerRecognizedSpeed(slowSpeed);
+            playerController.PlayerRecognizedColor();
         } 
     }
 }
