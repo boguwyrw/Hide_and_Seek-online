@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 _movement;
     private Vector3 _moveDirection;
 
-    private Color[] _colors = new Color[] { Color.red, Color.green, Color.blue, Color.gray, Color.cyan, Color.black};
+    private Color[] _colors = new Color[] { Color.red, Color.green, Color.blue, Color.gray, Color.cyan, Color.black, new Color(1.0f, 0.5f, 0.31f), new Color(1.0f, 0.84f, 0.0f), new Color(1.0f, 0.55f, 0.0f), new Color(1.0f, 0.41f, 0.706f) };
     private Color _playerColor;
 
     #region MonoBehaviour methods
@@ -50,7 +50,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         if (_isSeeker)
         {
-            ChangeColor(new Color(1.0f, 0.0f, 0.0f, 1.0f));
+            ChangeColor(_colors[0]);
+        }
+        else
+        {
+            int indexColor = Random.Range(1, _colors.Length);
+            ChangeColor(_colors[indexColor]);
         }
     }
 
@@ -159,7 +164,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         Hashtable props = new Hashtable
         {
-            { "playerColor", color.r }
+            { "playerColor", new Vector3(color.r, color.g, color.b) }
         };
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
     }
@@ -191,12 +196,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
         _walkSpeed = 4.0f;
         _runSpeed = 12.0f;
     }
-
+    /*
     public void PlayerRecognizedColor()
     {
         _renderer.material.color = new Color32(255, 120, 0, 255);
     }
-
+    */
     public void PlayerColor(bool isSeeker)
     {
         _isSeeker = isSeeker;
@@ -208,8 +213,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (changedProps.ContainsKey("playerColor") && targetPlayer == photonView.Owner)
         {
-            float colorR = (float)changedProps["playerColor"];
-            _playerColor = new Color(colorR, 0.0f, 0.0f, 1.0f);
+            Vector3 color = (Vector3)changedProps["playerColor"];
+            _playerColor = new Color(color.x, color.y, color.z);
             UpdatePlayerColor(_playerColor);
         }
     }

@@ -78,7 +78,7 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
 
             PlayerController playerController = gameObject.GetComponent<PlayerController>();
             playerController.PlayerRecognizedSpeed(slowSpeed);
-            playerController.PlayerRecognizedColor();
+            //playerController.PlayerRecognizedColor();
         } 
     }
 }
