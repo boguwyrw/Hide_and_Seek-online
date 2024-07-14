@@ -18,9 +18,9 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
 
     private Vector3 _hitPosition = new Vector3(0.5f, 0.5f, 0.0f);
 
-    private List<PhotonView> _caughtPlayersPhotonView = new List<PhotonView>();
+    private List<Transform> _caughtPlayersTransform = new List<Transform>();
 
-    public List<PhotonView> CaughtPlayersPhotonView {  get { return _caughtPlayersPhotonView; } }
+    public List<Transform> CaughtPlayersTransform {  get { return _caughtPlayersTransform; } }
 
     private void Start()
     {
@@ -59,7 +59,7 @@ public class PlayerVisionController : MonoBehaviourPunCallbacks
                     PhotonNetwork.Instantiate(_chain.name, hitPlayer.transform.position, Quaternion.identity);
 
                     PhotonView seenPlayerPhotonView = hitPlayer.GetPhotonView();
-                    _caughtPlayersPhotonView.Add(seenPlayerPhotonView);
+                    _caughtPlayersTransform.Add(seenPlayerPhotonView.transform);
                     seenPlayerPhotonView.RPC("PlayerRecognizedRPC", RpcTarget.All, photonView.Owner.NickName, PhotonNetwork.LocalPlayer.ActorNumber, _playerSlowSpeed);
                 }
             }

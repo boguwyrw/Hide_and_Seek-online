@@ -21,27 +21,16 @@ public class PlayerBarsTrap : MonoBehaviourPunCallbacks
         
     }
 
-    [PunRPC]
-    private void PlayerCaughtRPC()
-    {
-        PlayerCaught();
-    }
-
-    private void PlayerCaught()
-    {
-
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == _treeLayerNumber)
         {
-            for (int i = 0; i < _playerVisionController.CaughtPlayersPhotonView.Count; i++)
+            if (photonView.IsMine)
             {
-                if (_playerVisionController.CaughtPlayersPhotonView[i].IsMine)
+                for (int i = 0; i < _playerVisionController.CaughtPlayersTransform.Count; i++)
                 {
-                    PhotonNetwork.Instantiate(_bars.name, transform.position, Quaternion.identity);
-                    _playerVisionController.CaughtPlayersPhotonView[i].RPC("PlayerCaughtRPC", RpcTarget.All);
+                    Transform caughtPlayer = _playerVisionController.CaughtPlayersTransform[i];
+                    PhotonNetwork.Instantiate(_bars.name, caughtPlayer.position, Quaternion.identity);
                 }
             }
         }
